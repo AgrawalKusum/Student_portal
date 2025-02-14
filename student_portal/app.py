@@ -5,9 +5,13 @@ app = Flask(__name__)
 app.secret_key = "secret" # change this production
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///students.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-db = SQLAlchemy(app)
 
-from models import User
+
+from models import db, User
+db.init_app(app)
+@app.before_first_request
+def create_tables():
+    db.create_all()
 
 #home page
 @app.route('/')
@@ -56,5 +60,6 @@ def logout():
     return redirect(url_for('home'))
 
 if __name__ == '__main__':
-    db.create_all()
+    with app.app_context():
+        db.create_all()
     app.run(debug=True)
