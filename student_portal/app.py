@@ -9,9 +9,6 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 from models import db, User
 db.init_app(app)
-@app.before_first_request
-def create_tables():
-    db.create_all()
 
 #home page
 @app.route('/')
