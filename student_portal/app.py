@@ -7,8 +7,15 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///students.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 
-from models import db, User
-db.init_app(app)
+'''from models import db, User
+db.init_app(app)'''
+db = SQLAlchemy(app)
+
+with app.app_context():
+    db.create_all()  #  Move this back to app.py
+
+from models import User  # Import only User
+
 
 #home page
 @app.route('/')
@@ -19,7 +26,7 @@ def home():
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
-        username = request.form['user   name']
+        username = request.form['username']
         email = request.form['email']
         password = request.form['password']
         new_user = User(username=username, email=email, password=password)
